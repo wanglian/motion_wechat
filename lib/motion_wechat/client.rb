@@ -1,3 +1,5 @@
+motion_require 'config'
+
 module MotionWechat
   class Client
 
