@@ -1,0 +1,349 @@
+<?xml version='1.0'?>
+<signatures version='1.0'>
+<enum name='WXErrCodeAuthDeny' value='-4'/>
+<enum name='WXErrCodeCommon' value='-1'/>
+<enum name='WXErrCodeSentFail' value='-3'/>
+<enum name='WXErrCodeUnsupport' value='-5'/>
+<enum name='WXErrCodeUserCancel' value='-2'/>
+<enum name='WXSceneFavorite' value='2'/>
+<enum name='WXSceneSession' value='0'/>
+<enum name='WXSceneTimeline' value='1'/>
+<enum name='WXSuccess' value='0'/>
+<class name='BaseReq'>
+<method selector='setType:'>
+<arg declared_type='int' index='0' name='type' type='i'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='type'>
+<retval declared_type='int' type='i'/>
+</method>
+</class>
+<class name='BaseResp'>
+<method selector='errCode'>
+<retval declared_type='int' type='i'/>
+</method>
+<method selector='errStr'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='setErrCode:'>
+<arg declared_type='int' index='0' name='errCode' type='i'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setErrStr:'>
+<arg declared_type='NSString*' index='0' name='errStr' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setType:'>
+<arg declared_type='int' index='0' name='type' type='i'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='type'>
+<retval declared_type='int' type='i'/>
+</method>
+</class>
+<class name='GetMessageFromWXResp'>
+<method selector='bText'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='message'>
+<retval declared_type='WXMediaMessage*' type='@'/>
+</method>
+<method selector='setBText:'>
+<arg declared_type='BOOL' index='0' name='bText' type='B'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setMessage:'>
+<arg declared_type='WXMediaMessage*' index='0' name='message' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setText:'>
+<arg declared_type='NSString*' index='0' name='text' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='text'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+</class>
+<class name='NSObject'>
+<method selector='onReq:'>
+<arg declared_type='BaseReq*' index='0' name='req' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='onResp:'>
+<arg declared_type='BaseResp*' index='0' name='resp' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='SendMessageToWXReq'>
+<method selector='bText'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method selector='message'>
+<retval declared_type='WXMediaMessage*' type='@'/>
+</method>
+<method selector='scene'>
+<retval declared_type='int' type='i'/>
+</method>
+<method selector='setBText:'>
+<arg declared_type='BOOL' index='0' name='bText' type='B'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setMessage:'>
+<arg declared_type='WXMediaMessage*' index='0' name='message' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setScene:'>
+<arg declared_type='int' index='0' name='scene' type='i'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setText:'>
+<arg declared_type='NSString*' index='0' name='text' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='text'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+</class>
+<class name='ShowMessageFromWXReq'>
+<method selector='message'>
+<retval declared_type='WXMediaMessage*' type='@'/>
+</method>
+<method selector='setMessage:'>
+<arg declared_type='WXMediaMessage*' index='0' name='message' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='WXApi'>
+<method class_method='true' selector='getApiVersion'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method class_method='true' selector='getWXAppInstallUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method class_method='true' selector='handleOpenURL:delegate:'>
+<arg declared_type='NSURL*' index='0' name='url' type='@'/>
+<arg declared_type='id' index='1' name='delegate' type='@'/>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method class_method='true' selector='isWXAppInstalled'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method class_method='true' selector='isWXAppSupportApi'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method class_method='true' selector='openWXApp'>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method class_method='true' selector='registerApp:'>
+<arg declared_type='NSString*' index='0' name='appid' type='@'/>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method class_method='true' selector='registerApp:withDescription:'>
+<arg declared_type='NSString*' index='0' name='appid' type='@'/>
+<arg declared_type='NSString*' index='1' name='appdesc' type='@'/>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method class_method='true' selector='sendReq:'>
+<arg declared_type='BaseReq*' index='0' name='req' type='@'/>
+<retval declared_type='BOOL' type='B'/>
+</method>
+<method class_method='true' selector='sendResp:'>
+<arg declared_type='BaseResp*' index='0' name='resp' type='@'/>
+<retval declared_type='BOOL' type='B'/>
+</method>
+</class>
+<class name='WXAppExtendObject'>
+<method selector='extInfo'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='fileData'>
+<retval declared_type='NSData*' type='@'/>
+</method>
+<method class_method='true' selector='object'>
+<retval declared_type='WXAppExtendObject*' type='@'/>
+</method>
+<method selector='setExtInfo:'>
+<arg declared_type='NSString*' index='0' name='extInfo' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setFileData:'>
+<arg declared_type='NSData*' index='0' name='fileData' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setUrl:'>
+<arg declared_type='NSString*' index='0' name='url' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='url'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+</class>
+<class name='WXEmoticonObject'>
+<method selector='emoticonData'>
+<retval declared_type='NSData*' type='@'/>
+</method>
+<method class_method='true' selector='object'>
+<retval declared_type='WXEmoticonObject*' type='@'/>
+</method>
+<method selector='setEmoticonData:'>
+<arg declared_type='NSData*' index='0' name='emoticonData' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='WXFileObject'>
+<method selector='fileData'>
+<retval declared_type='NSData*' type='@'/>
+</method>
+<method selector='fileExtension'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method class_method='true' selector='object'>
+<retval declared_type='WXFileObject*' type='@'/>
+</method>
+<method selector='setFileData:'>
+<arg declared_type='NSData*' index='0' name='fileData' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setFileExtension:'>
+<arg declared_type='NSString*' index='0' name='fileExtension' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='WXImageObject'>
+<method selector='imageData'>
+<retval declared_type='NSData*' type='@'/>
+</method>
+<method selector='imageUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method class_method='true' selector='object'>
+<retval declared_type='WXImageObject*' type='@'/>
+</method>
+<method selector='setImageData:'>
+<arg declared_type='NSData*' index='0' name='imageData' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setImageUrl:'>
+<arg declared_type='NSString*' index='0' name='imageUrl' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='WXMediaMessage'>
+<method selector='description'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='mediaObject'>
+<retval declared_type='id' type='@'/>
+</method>
+<method selector='mediaTagName'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method class_method='true' selector='message'>
+<retval declared_type='WXMediaMessage*' type='@'/>
+</method>
+<method selector='setDescription:'>
+<arg declared_type='NSString*' index='0' name='description' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setMediaObject:'>
+<arg declared_type='id' index='0' name='mediaObject' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setMediaTagName:'>
+<arg declared_type='NSString*' index='0' name='mediaTagName' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setThumbData:'>
+<arg declared_type='NSData*' index='0' name='thumbData' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setThumbImage:'>
+<arg declared_type='id' index='0' name='image' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setTitle:'>
+<arg declared_type='NSString*' index='0' name='title' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='thumbData'>
+<retval declared_type='NSData*' type='@'/>
+</method>
+<method selector='title'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+</class>
+<class name='WXMusicObject'>
+<method selector='musicDataUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='musicLowBandDataUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='musicLowBandUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='musicUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method class_method='true' selector='object'>
+<retval declared_type='WXMusicObject*' type='@'/>
+</method>
+<method selector='setMusicDataUrl:'>
+<arg declared_type='NSString*' index='0' name='musicDataUrl' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setMusicLowBandDataUrl:'>
+<arg declared_type='NSString*' index='0' name='musicLowBandDataUrl' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setMusicLowBandUrl:'>
+<arg declared_type='NSString*' index='0' name='musicLowBandUrl' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setMusicUrl:'>
+<arg declared_type='NSString*' index='0' name='musicUrl' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</class>
+<class name='WXVideoObject'>
+<method class_method='true' selector='object'>
+<retval declared_type='WXVideoObject*' type='@'/>
+</method>
+<method selector='setVideoLowBandUrl:'>
+<arg declared_type='NSString*' index='0' name='videoLowBandUrl' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='setVideoUrl:'>
+<arg declared_type='NSString*' index='0' name='videoUrl' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='videoLowBandUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+<method selector='videoUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+</class>
+<class name='WXWebpageObject'>
+<method class_method='true' selector='object'>
+<retval declared_type='WXWebpageObject*' type='@'/>
+</method>
+<method selector='setWebpageUrl:'>
+<arg declared_type='NSString*' index='0' name='webpageUrl' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='webpageUrl'>
+<retval declared_type='NSString*' type='@'/>
+</method>
+</class>
+<informal_protocol name='WXApiDelegate'>
+<method selector='onReq:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='BaseReq*' index='0' name='req' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+<method selector='onResp:' type='v12@0:4@8' type64='v24@0:8@16'>
+<arg declared_type='BaseResp*' index='0' name='resp' type='@'/>
+<retval declared_type='void' type='v'/>
+</method>
+</informal_protocol>
+</signatures>

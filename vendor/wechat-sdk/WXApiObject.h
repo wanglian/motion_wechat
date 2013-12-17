@@ -8,200 +8,176 @@
 
 #import <Foundation/Foundation.h>
 
-/////////////////////////////////////////////////////////////
-
+/*! @brief 错误码
+ *
+ */
 enum  WXErrCode {
-    WXSuccess           = 0,
-    WXErrCodeCommon     = -1,
-    WXErrCodeUserCancel = -2,
-    WXErrCodeSentFail   = -3,
-    WXErrCodeAuthDeny   = -4,
-    WXErrCodeUnsupport  = -5,
+    
+    WXSuccess           = 0,    /**< 成功    */
+    WXErrCodeCommon     = -1,   /**< 普通错误类型    */
+    WXErrCodeUserCancel = -2,   /**< 用户点击取消并返回    */
+    WXErrCodeSentFail   = -3,   /**< 发送失败    */
+    WXErrCodeAuthDeny   = -4,   /**< 授权失败    */
+    WXErrCodeUnsupport  = -5,   /**< 微信不支持    */
 };
 
+/*! @brief 请求发送场景
+ *
+ */
 enum WXScene {
-  
-    WXSceneSession   = 0, 
-    WXSceneTimeline = 1,
+    
+    WXSceneSession  = 0,        /**< 聊天界面    */
+    WXSceneTimeline = 1,        /**< 朋友圈      */
+    WXSceneFavorite = 2,        /**< 收藏       */
 };
 
-enum WXAPISupport {
-  
-    WXAPISupportSession = 0,
-};
-
-/*! @brief Basic class of all request classes of WeChat SDK
+/*! @brief 该类为微信终端SDK所有请求类的基类
  *
  */
 @interface BaseReq : NSObject
 
-/** Request type */
+/** 请求类型 */
 @property (nonatomic, assign) int type;
-
 @end
 
-/*! @brief Basic class of all response classes of WeChat SDK
+/*! @brief 该类为微信终端SDK所有响应类的基类
  *
  */
 @interface BaseResp : NSObject
-/** Error code */
+/** 错误码 */
 @property (nonatomic, assign) int errCode;
-/** Error notification string */
+/** 错误提示字符串 */
 @property (nonatomic, retain) NSString *errStr;
-/** Response type */
+/** 响应类型 */
 @property (nonatomic, assign) int type;
 
 @end
 
-
 @class WXMediaMessage;
-/*! @brief Message structure that the third-party application uses to send message to WeChat
+
+/*! @brief 第三方程序发送消息至微信终端程序的接口
  *
- * The third-party app uses SendMessageToWXReq to send messages to WeChat. 
- * The message type can be text (member: text) and multi-media (member: message). 
- * WeChat will then return the result after processing.
+ * 第三方程序向微信发送信息需要调用此接口，并传入具体请求类型作为参数。请求的信息内容包括文本消息和多媒体消息，
+ * 分别对应于text和message成员。调用该方法后，微信处理完信息会向第三方程序发送一个处理结果。
  * @see SendMessageToWXResp
  */
 @interface SendMessageToWXReq : BaseReq
-
-/** Text contents in the message sent
- * @note The size of texts should be within 0-10k.
+/** 发送消息的文本内容
+ * @attention 文本长度必须大于0且小于10K
  */
 @property (nonatomic, retain) NSString* text;
-
-/** Multi-media contents in the message sent
+/** 发送消息的多媒体内容
  * @see WXMediaMessage
  */
 @property (nonatomic, retain) WXMediaMessage* message;
-/** The message type can be Text or Multi-media but not both. */
+/** 发送消息的类型，包括文本消息和多媒体消息两种
+ * @attention 两者只能选择其一，不能同时发送文本和多媒体消息
+ */
 @property (nonatomic, assign) BOOL bText;
-/** Target scene, you can send to contact or moments. Contact if default choice. */
+
+/** 发送的目标场景，可以选择发送到聊天界面(WXSceneSession)、朋友圈(WXSceneTimeline)或收藏(WXSceneFavorite)。
+ * @note 默认发送到聊天界面。
+ * @see WXScene
+ */
 @property (nonatomic, assign) int scene;
 
 @end
 
-/*! @brief Result of SendMessageToWXReq that WeChat returns to the third-party app
+/*! @brief 第三方程序发送SendMessageToWXReq至微信，微信处理完成后返回的处理结果类型。
  *
- * Wechat uses SendMessageToWXResp to return results of SendMessageToWXReq from the third-party app.
+ * 第三方程序向微信终端发送SendMessageToWXReq后，微信发送回来的处理结果，该结果用SendMessageToWXResp表示。
  */
 @interface SendMessageToWXResp : BaseResp
 @end
 
-
-/*! @brief Message structure that the third-party application uses to request authorization from WeChat
+/*! @brief 微信终端向第三方程序请求提供内容请求类型。
  *
- * The third-party app requests for verification and authorization by calling sendReq member function of WXApi
- * and sending an SendAuthReq message to WeChat. 
- * WeChat will return a result after processing.
- * @see SendAuthResp
- */
-@interface SendAuthReq : BaseReq
-/** The third-party app requests verification and authorization by calling sendReq member function of WXApi and sending an SendAuthReq message to WeChat. WeChat will return a result after processing.
- * @see SendAuthResp
- * @note scope string can not exceed 1k
- */
-@property (nonatomic, retain) NSString* scope;
-/** It's the unique identifier of request from third-party application. WeChat will include it in the message returned. 
- * @note state string can not exceed 1k
- */
-@property (nonatomic, retain) NSString* state;
-@end
-
-/*! @brief Result of verification and authorization requests that WeChat returns to third-party applications
- *
- * The third-party requests for verification and authorization by calling sendReq member function of WXApi and sending a SendAuthReq message to WeChat. WeChat then returns the result in an SendAuthResp message.
- * @see onResp
- */
-@interface SendAuthResp : BaseResp
-/** User name */
-@property (nonatomic, retain) NSString* userName;
-/** Verification token */
-@property (nonatomic, retain) NSString* token;
-/** Expiration date of the verification */
-@property (nonatomic, retain) NSDate* expireDate;
-/** It's the unique identifier of request from third-party application. The third-party app inputs it while calling sendReq and WeChat will include it in the message returned.
- * @note state string can not exceed 1k
- */
-@property (nonatomic, retain) NSString* state; 
-@end
-
-
-/*! @brief Message structure that WeChat uses to request contents from third-party applications
- *
- * WeChat sends a request to a third-party application for contents with GetMessageFromWXReq message structure;
- * and the third-party application needs to call sendResp to return the result with GetMessageFromWXResp message structure
+ * 微信终端向第三方程序请求提供内容，微信终端会向第三方程序发送GetMessageFromWXReq请求类型，
+ * 需要第三方程序调用sendResp返回一个GetMessageFromWXResp消息结构体。
  */
 @interface GetMessageFromWXReq : BaseReq
 @end
 
-/*! @brief Message structure that the third-party application uses to response requests from WeChat
+/*! @brief 微信终端向第三方程序请求提供内容，第三方程序向微信终端返回处理结果类型。
  *
- * WeChat sends a request to a third-party application; 
- * and the third-party application calls sendResp to return the result in a GetMessageFromWXResp message.
+ * 微信终端向第三方程序请求提供内容，第三方程序调用sendResp向微信终端返回一个GetMessageFromWXResp消息结构体。
  */
 @interface GetMessageFromWXResp : BaseResp
-/** Text contents provided to WeChat
- @note The size of texts should be within 0-10k.
+/** 向微信终端提供的文本内容
+ * @attention 文本长度必须大于0且小于10K
  */
 @property (nonatomic, retain) NSString* text;
-/** Multi-media contents provided to WeChat
+/** 向微信终端提供的多媒体内容。
  * @see WXMediaMessage
  */
 @property (nonatomic, retain) WXMediaMessage* message;
-/** Types of message that providing contents to WeChat. It could be text or multi-media but not both. */
+/** 向微信终端提供内容的消息类型，包括文本消息和多媒体消息两种
+ * @attention 两者只能选择其一，不能同时发送文本和多媒体消息 
+ */
 @property (nonatomic, assign) BOOL bText;
 @end
 
-/*! @brief WeChat asks the third-party to show contents
+/*! @brief 微信通知第三方程序，要求第三方程序显示的消息结构体。
  *
- * WeChat sends an ShowMessageFromWXReq message to ask the third-party app to show certain contents. 
- * And the third-party app calls sendResp to send an ShowMessageFromWXResp message to WeChat after processing.
+ * 微信需要通知第三方程序显示或处理某些内容时，会向第三方程序发送ShowMessageFromWXReq消息结构体。
+ * 第三方程序处理完内容后调用sendResp向微信终端发送ShowMessageFromWXResp。
  */
 @interface ShowMessageFromWXReq : BaseReq
-/** WeChat asks the third-party to show contents 
+/** 微信终端向第三方程序发送的要求第三方程序处理的多媒体内容
  * @see WXMediaMessage
  */
 @property (nonatomic, retain) WXMediaMessage* message;
 @end
 
-/*! @brief WeChat sends an ShowMessageFromWXReq message to ask the third-party app to 
- * show certain contents.
- * And the third-party app calls sendResp to send an ShowMessageFromWXResp message to 
- * WeChat after processing.
+/*! @brief 微信通知第三方程序，要求第三方程序显示或处理某些消息，第三方程序处理完后向微信终端发送的处理结果。
+ *
+ * 微信需要通知第三方程序显示或处理某些内容时，会向第三方程序发送ShowMessageFromWXReq消息结构体。
+ * 第三方程序处理完内容后调用sendResp向微信终端发送ShowMessageFromWXResp。
  */
 @interface ShowMessageFromWXResp : BaseResp
+@end
+
+/*! @brief 微信终端打开第三方程序请求类型
+ *
+ *  微信向第三方发送的结构体，第三方不需要返回
+ */
+@interface LaunchFromWXReq : BaseReq
 @end
 
 
 #pragma mark - WXMediaMessage
 
-/*! @brief Structure of multi-media messages
- * 
- * It's used for multi-media contents transferred between WeChat and the third-party app.
+/*! @brief 多媒体消息结构体
+ *
+ * 用于微信终端和第三方程序之间传递消息的多媒体消息内容
  */
 @interface WXMediaMessage : NSObject
 
 +(WXMediaMessage *) message;
 
-/** Title 
- * @note contents can not exceed 512 bytes
+/** 标题
+ * @attention 长度不能超过512字节
  */
 @property (nonatomic, retain) NSString *title;
-/** Description 
- * @note contents can not exceed 1k
+/** 描述内容
+ * @attention 长度不能超过1K
  */
 @property (nonatomic, retain) NSString *description;
-/** Data of the thumb 
- * @note contents can not exceed 32K
+/** 缩略图数据
+ * @attention 内存大小不能超过32K
  */
 @property (nonatomic, retain) NSData   *thumbData;
-/** Multi-media data object, including WXWebpageObject, WXImageObject, WXMusicObject, etc.. */
+/** 多媒体消息标签，第三方程序可选填此字段，用于数据运营统计等
+ * @attention 长度不能超过64字节
+ */
+@property (nonatomic, retain) NSString *mediaTagName;
+/** 多媒体数据对象，可以为WXImageObject，WXMusicObject，WXVideoObject，WXWebpageObject等。 */
 @property (nonatomic, retain) id        mediaObject;
 
-/*! @brief Method used to set the thumb of image message
+/*! @brief 设置消息缩略图的方法
  *
- * @param image Thumb
- * @note contents can not exceed 32K
+ * @param image 缩略图
+ * @attention 内存大小不能超过32K
  */
 - (void) setThumbImage:(UIImage *)image;
 
@@ -209,58 +185,67 @@ enum WXAPISupport {
 
 
 #pragma mark -
-/*! @brief Image object included in multi-media messages
+/*! @brief 多媒体消息中包含的图片数据对象
  *
- * The image object included in the message transferred between WeChat and the third-party app
- * @note imageData and imageUrl can not be left blank at the same time.
+ * 微信终端和第三方程序之间传递消息中包含的图片数据对象。
+ * @attention imageData和imageUrl成员不能同时为空
  * @see WXMediaMessage
  */
 @interface WXImageObject : NSObject
-/*! @brief Return a WXImageObject object
+/*! @brief 返回一个WXImageObject对象
  *
- * @note The WXImageObject object returned is auto-released.
+ * @note 返回的WXImageObject对象是自动释放的
  */
 +(WXImageObject *) object;
 
-/** Actual contents of the image
- * @note file size can not exceed 10M.
+/** 图片真实数据内容
+ * @attention 大小不能超过10M
  */
 @property (nonatomic, retain) NSData    *imageData;
-/** Image URL 
- * @note contents can not exceed 10K
+/** 图片url
+ * @attention 长度不能超过10K
  */
 @property (nonatomic, retain) NSString  *imageUrl;
 
 @end
 
-/*! @brief Music object included in multi-media messages
+/*! @brief 多媒体消息中包含的音乐数据对象
  *
- * Music object included in the message transferred between WeChat and the third-party app
- * @note musicUrl and musicLowBandUrl member can not be left blank at the same time.
+ * 微信终端和第三方程序之间传递消息中包含的音乐数据对象。
+ * @attention musicUrl和musicLowBandUrl成员不能同时为空。
  * @see WXMediaMessage
  */
 @interface WXMusicObject : NSObject
-/*! @brief Return a WXMusicObject object
+/*! @brief 返回一个WXMusicObject对象
  *
- * @note The WXMusicObject object returned is auto-released.
+ * @note 返回的WXMusicObject对象是自动释放的
  */
 +(WXMusicObject *) object;
 
-/** URL of music data 
- * @note contents can not exceed 10K
+/** 音乐网页的url地址
+ * @attention 长度不能超过10K
  */
 @property (nonatomic, retain) NSString *musicUrl;
-/** URL of lowband data of the music 
- * @note contents can not exceed 10K
+/** 音乐lowband网页的url地址
+ * @attention 长度不能超过10K
  */
 @property (nonatomic, retain) NSString *musicLowBandUrl;
+/** 音乐数据url地址
+ * @attention 长度不能超过10K
+ */
+@property (nonatomic, retain) NSString *musicDataUrl;
+
+/**音乐lowband数据url地址
+ * @attention 长度不能超过10K
+ */
+@property (nonatomic, retain) NSString *musicLowBandDataUrl;
 
 @end
 
-/*! @brief Video object included in multi-media messages
+/*! @brief 多媒体消息中包含的视频数据对象
  *
- * Video object included in the message transferred between WeChat and the third-party app
- * @note videoUrl and videoLowBandUrl can not be left blank at the same time.
+ * 微信终端和第三方程序之间传递消息中包含的视频数据对象。
+ * @attention videoUrl和videoLowBandUrl不能同时为空。
  * @see WXMediaMessage
  */
 @interface WXVideoObject : NSObject
@@ -270,83 +255,107 @@ enum WXAPISupport {
  */
 +(WXVideoObject *) object;
 
-/** URL of video data 
- * @note contents can not exceed 10K
+/** 视频网页的url地址
+ * @attention 长度不能超过10K
  */
 @property (nonatomic, retain) NSString *videoUrl;
-/** URL of video lowband data
- * @note contents can not exceed 10K
+/** 视频lowband网页的url地址
+ * @attention 长度不能超过10K
  */
 @property (nonatomic, retain) NSString *videoLowBandUrl;
 
 @end
 
-/*! @brief Webpage object included in multi-media messages
+/*! @brief 多媒体消息中包含的网页数据对象
  *
- * Webpage object included in the multi-media message transferred between WeChat and the third-party app
+ * 微信终端和第三方程序之间传递消息中包含的网页数据对象。
  * @see WXMediaMessage
  */
 @interface WXWebpageObject : NSObject
-/*! @brief Return a WXWebpageObject object
+/*! @brief 返回一个WXWebpageObject对象
  *
- * @note The WXWebpageObject object returned is auto-released.
+ * @note 返回的WXWebpageObject对象是自动释放的
  */
 +(WXWebpageObject *) object;
 
-/** URL of the webpage
- * @note It can not be left blank and the size can not exceed 10K.
+/** 网页的url地址
+ * @attention 不能为空且长度不能超过10K
  */
 @property (nonatomic, retain) NSString *webpageUrl;
 
 @end
 
-/*! @brief App extend object included in multi-media messages
+/*! @brief 多媒体消息中包含的App扩展数据对象
  *
- * The third-party app sends a multi-media message that includes WXAppExtendObject to WeChat.
- * WeChat calls this app to process the multi-media contents.
- * @note url, extInfo and fileData can not be left blank at the same time.
+ * 第三方程序向微信终端发送包含WXAppExtendObject的多媒体消息，
+ * 微信需要处理该消息时，会调用该第三方程序来处理多媒体消息内容。
+ * @note extInfo和fileData不能同时为空
  * @see WXMediaMessage
  */
 @interface WXAppExtendObject : NSObject
-/*! @brief Return a WXAppExtendObject object
+/*! @brief 返回一个WXAppExtendObject对象
  *
- * @note The WXAppExtendObject object returned is auto-released.
+ * @note 返回的WXAppExtendObject对象是自动释放的
  */
 +(WXAppExtendObject *) object;
 
-/** If the third-party app does not exist, WeChat will open the download URL of the app. 
- * @note contents can not exceed 10K
- */
-@property (nonatomic, retain) NSString *url;
-/** Custom data of the third-party app. WeChat will return it to the app for processing.
- * @note contents can not exceed 2K
- */
-@property (nonatomic, retain) NSString *extInfo;
-/** App file data. When this data is sent to WeChat contacts, the contact need to click to download. 
- * WeChat then returns it to the app for processing. 
- * @note file size can not exceed 10M.
+/** App文件数据，该数据发送给微信好友，微信好友需要点击后下载数据，微信终端会回传给第三方程序处理
+ * @attention 大小不能超过10M
  */
 @property (nonatomic, retain) NSData   *fileData;
 
+/** 第三方程序自定义简单数据，微信终端会回传给第三方程序处理
+ * @attention 长度不能超过2K
+ */
+@property (nonatomic, retain) NSString *extInfo;
+
+/**
+ * @attention Deprecated
+ */
+@property (nonatomic, retain) NSString *url;
+
 @end
 
-
-
-/*
- * Attach data while launching app from WeChat
+/*! @brief 多媒体消息中包含的表情数据对象
+ *
+ * 微信终端和第三方程序之间传递消息中包含的表情数据对象。
+ * @see WXMediaMessage
  */
 @interface WXEmoticonObject : NSObject
 
-/*
- * WeChat launch app type, see WXAppLaunchType
+/*! @brief 返回一个WXEmoticonObject对象
+ *
+ * @note 返回的WXEmoticonObject对象是自动释放的
  */
 +(WXEmoticonObject *) object;
 
-/*
- * Message content attached while launching WeChat
+/** 表情真实数据内容
+ * @attention 大小不能超过10M
  */
 @property (nonatomic, retain) NSData    *emoticonData;
 
 @end
 
+/*! @brief 多媒体消息中包含的文件数据对象
+ *
+ * @see WXMediaMessage
+ */
+@interface WXFileObject : NSObject
 
+/*! @brief 返回一个WXFileObject对象
+ *
+ * @note 返回的WXFileObject对象是自动释放的
+ */
++(WXFileObject *) object;
+
+/** 文件后缀名
+ * @attention 长度不超过64字节
+ */
+@property (nonatomic, retain) NSString  *fileExtension;
+
+/** 文件真实数据内容
+ * @attention 大小不能超过10M
+ */
+@property (nonatomic, retain) NSData    *fileData;
+
+@end
